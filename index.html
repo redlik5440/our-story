@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Наша история ❤️</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+        background-color: #faf7f2;
+        color: #3d3a37;
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+
+        /* --- ШАПКА --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(250, 247, 242, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #d4a373;
+        }
+
+        /* --- HERO СЕКЦИЯ --- */
+        .hero {
+            height: 100vh;
+            min-height: 100vh;
+            padding-top: 100000px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            background: linear-gradient(135deg, #fefae0 0%, #faedcd 100%);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            color: #283618;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #606c38;
+            margin-bottom: 25px;
+        }
+
+        .counter-box {
+            background: #fff;
+            padding: 15px 30px;
+            border-radius: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #bc6c25;
+            margin-bottom: 30px;
+        }
+
+        /* --- ОБЩИЕ СТИЛИ СЕКЦИЙ --- */
+        section {
+            padding: 80px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 40px;
+            color: #283618;
+        }
+
+        .btn {
+            background: #bc6c25;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .btn:hover {
+            background: #dda15e;
+            transform: translateY(-2px);
+        }
+
+        /* --- ГАЛЕРЕЯ МОМЕНТОВ --- */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .photo-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+            transition: transform 0.3s ease;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .photo-info {
+            padding: 20px;
+        }
+
+        .photo-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #bc6c25;
+        }
+
+        .photo-info p {
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        /* --- ИНТЕРАКТИВ: ПРИЧИНЫ --- */
+        .reasons-container {
+            background: #fefae0;
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .reason-card {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .reason-card h3 {
+            font-size: 1.3rem;
+            color: #283618;
+            margin-bottom: 20px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- КАРТА ПАМЯТНЫХ МЕСТ --- */
+        .places-timeline {
+            position: relative;
+            max-width: 700px;
+            margin: 0 auto;
+            padding-left: 20px;
+            border-left: 3px solid #dda15e;
+        }
+
+        .place-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 20px;
+        }
+
+        .place-item::before {
+            content: '📍';
+            position: absolute;
+            left: -33px;
+            top: 0;
+            background: #faf7f2;
+            padding: 2px;
+            font-size: 1.2rem;
+        }
+
+        .place-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        }
+
+        .place-card h3 {
+            color: #bc6c25;
+            margin-bottom: 5px;
+        }
+
+        .place-card .date {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        /* --- КУПОНЫ НА ЖЕЛАНИЯ --- */
+        .coupons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .coupon-card {
+            background: #fff;
+            border: 2px dashed #dda15e;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            transition: 0.3s;
+        }
+
+        .coupon-card h3 {
+            color: #283618;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .coupon-card p {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .coupon-card.activated {
+            background: #e9edc9;
+            border-style: solid;
+            border-color: #606c38;
+        }
+
+        /* --- ВИКТОРИНА --- */
+        .quiz-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .quiz-opt-btn {
+            background: #fefae0;
+            border: 1px solid #dda15e;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #283618;
+            transition: 0.2s;
+        }
+
+        .quiz-opt-btn:hover {
+            background: #faedcd;
+        }
+
+        /* --- СЕКРЕТНОЕ ПИСЬМО --- */
+        .envelope-card {
+            background: #fff;
+            padding: 40px 20px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .secret-input {
+            padding: 12px 20px;
+            border: 1px solid #dda15e;
+            border-radius: 25px;
+            outline: none;
+            text-align: center;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        .secret-content {
+            display: none;
+            text-align: left;
+            background: #fefae0;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border-left: 4px solid #bc6c25;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- ПОДВАЛ --- */
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: #faf7f2;
+            color: #888;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            header { padding: 12px 15px; }
+            .logo { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка -->
+    <header>
+        <div class="logo">С любовью ❤️, от вечно любящего Стаса</div>
+    </header>
+
+    <!-- Главный экран -->
+    <section class="hero">
+        <h1>Для самой особенной</h1>
+        <p>Каждый день с тобой — это отдельная счастливая история</p>
+        
+        <div class="counter-box" id="counter">
+            Считаем дни вместе...
+        </div>
+    </section>
+
+    <!-- Галерея -->
+    <section>
+        <h2 class="section-title">Наши лучшие моменты</h2>
+        <div class="photo-grid">
+            <div class="photo-card">
+                <img src="IMG_5246.jpg" alt="Фото">
+                <div class="photo-info">
+                    <h3>Наш первый совместный праздник</h3>
+                    <p>Тот день, когда я познакомился с твоим дядей, и мы хорошо провели время.</p>
+                </div>
+            </div>
+            <div class="photo-card">
+                <img src="IMG_6188.jpg" alt="Фото">
+                <div class="photo-info">
+                    <h3>Просто лучший вечер</h3>
+                    <p>День наполненный знакомствами и хорошими воспоминаниямию.</p>
+                </div>
+            </div>
+            <div class="photo-card">
+                <img src="IMG_6477.jpg" alt="Фото">
+                <div class="photo-info">
+                    <h3>Хороший и веселый день</h3>
+                    <p>Один из большого количества дней, когда нам обоим было весело.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Карта памятных мест -->
+    <section>
+        <h2 class="section-title">Карта наших воспоминаний 📍</h2>
+        <div class="places-timeline">
+            <div class="place-item">
+                <div class="place-card">
+                    <h3>Первая встреча</h3>
+                    <div class="date">Обычная и одновременно самая лучшая школа</div>
+                    <p>День, когда школьный день перерос в бесконечные разговоры обо всем на свете.</p>
+                </div>
+            </div>
+            <div class="place-item">
+                <div class="place-card">
+                    <h3>Наша первая совместная гулянка (хоть и не вдоем)</h3>
+                    <div class="date">Вейно сити</div>
+                    <p>Воспоминания, созданные в компании и мой первый взгляд на тебя.</p>
+                </div>
+            </div>
+            <div class="place-item">
+                <div class="place-card">
+                    <h3>Наши дома</h3>
+                    <div class="date">Также вейно</div>
+                    <p>Наши любимые места, в которых также было создано много воспоминаний.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Причины любви -->
+    <section class="reasons-container">
+        <h2 class="section-title">Почему я тебя люблю</h2>
+        <div class="reason-card">
+            <h3 id="reasonText">Нажми кнопку ниже, чтобы узнать одну из причин✨</h3>
+            <button class="btn" onclick="nextReason()">Следующая причина</button>
+        </div>
+    </section>
+
+    <!-- Купоны на желания -->
+    <section>
+        <h2 class="section-title">Виртуальные купоны 🎟️</h2>
+        <div class="coupons-grid">
+            <div class="coupon-card" id="coupon1">
+                <h3>Вечер кинчика</h3>
+                <p>Фильм выбираешь ты, а с меня вкусный ужин и вкусняшки.</p>
+                <button class="btn" onclick="activateCoupon('coupon1')">Активировать</button>
+            </div>
+            <div class="coupon-card" id="coupon2">
+                <h3>Внезапный букет</h3>
+                <p>Применение этой карточки гарантирует доставку цветов в любой момент.</p>
+                <button class="btn" onclick="activateCoupon('coupon2')">Активировать</button>
+            </div>
+            <div class="coupon-card" id="coupon3">
+                <h3>Твой выбор</h3>
+                <p>Пишешь или говоришь, что хочешь и я это делаю или говорю без претензий.</p>
+                <button class="btn" onclick="activateCoupon('coupon3')">Активировать</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Викторина -->
+    <section>
+        <h2 class="section-title">Мини-тест: Наша история 💡</h2>
+        <div class="quiz-card" id="quizContainer">
+            <h3 id="quizQuestion">Загрузка вопроса...</h3>
+            <div class="quiz-options" id="quizOptions"></div>
+        </div>
+    </section>
+
+    <!-- Секретное письмо -->
+    <section>
+        <h2 class="section-title">Конверт с письмом ✉️</h2>
+        <div class="envelope-card">
+            <p style="margin-bottom: 15px; color: #666;">Введите секретное слово или важные цифры, которые ты придумала, чтобы открыть письмо:</p>
+            <input type="text" class="secret-input" id="secretKey" placeholder="Введите пароль...">
+            <br>
+            <button class="btn" onclick="openSecret()">Открыть письмо</button>
+
+            <div class="secret-content" id="secretLetter">
+                <p><strong>Моя дорогая,</strong></p><br>
+                <p>Спасибо тебе за каждый день, за твою заботу, поддержку и невероятную улыбку. Ты делаешь мою жизнь по-настоящему яркой и особенной.</p><br>
+                <p>Я создавал эту страничку с огромным теплом, чтобы напомнить тебе, как сильно я тебя ценю и люблю! ❤️</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Создано специально для тебя • 2026</p>
+    </footer>
+
+    <!-- Скрипты -->
+    <script>
+        // 1. Счётчик дней
+        const startDate = new Date('2026-05-21');
+        const today = new Date();
+        const daysTogether = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+        document.getElementById('counter').innerText = `Вместе уже ${daysTogether} дней ❤️`;
+
+        // 2. Интерактивные причины
+        const reasons = [
+            "Твоя улыбка способна сделать ярче даже самый пасмурный день.",
+            "С тобой можно молчать так же комфортно, как и говорить часами.",
+            "Ты поддерживаешь меня во всех моих идеях и увлечениях.",
+            "Твоя забота — это то, что чувствуется в каждой мелочи.",
+            "Рядом с тобой мне хочется становиться лучше каждый день."
+        ];
+        let currentReasonIndex = 0;
+        function nextReason() {
+            currentReasonIndex = (currentReasonIndex + 1) % reasons.length;
+            document.getElementById('reasonText').innerText = reasons[currentReasonIndex];
+        }
+
+        // 3. Активация купонов + конфетти
+        function activateCoupon(id) {
+            const coupon = document.getElementById(id);
+            const btn = coupon.querySelector('.btn');
+            coupon.classList.add('activated');
+            btn.innerText = "Активировано ✨";
+            btn.disabled = true;
+            btn.style.opacity = "0.7";
+
+            // Салют из конфетти
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        // 4. Логика Викторины
+        const quizData = [
+            {
+                question: "Где мы впервые увиделись?",
+                options: ["В Вейнянской школе", "хз", "На желтых качелях"],
+                correct: 0
+            },
+            {
+                question: "Какая у нас самая частая тема для долгих разговоров?",
+                options: ["Мечты и путешествия", "Совместные планы", "И то, и другое!"],
+                correct: 2
+            }
+        ];
+
+        let currentQuiz = 0;
+        function loadQuiz() {
+            if(currentQuiz >= quizData.length) {
+                document.getElementById('quizContainer').innerHTML = "<h3>Ура! Ты отлично знаешь нашу историю! ❤️</h3>";
+                confetti({ particleCount: 150, spread: 80 });
+                return;
+            }
+            const q = quizData[currentQuiz];
+            document.getElementById('quizQuestion').innerText = q.question;
+            const optsDiv = document.getElementById('quizOptions');
+            optsDiv.innerHTML = '';
+            
+            q.options.forEach((opt, idx) => {
+                const button = document.createElement('button');
+                button.className = 'quiz-opt-btn';
+                button.innerText = opt;
+                button.onclick = () => {
+                    if(idx === q.correct) {
+                        alert("Правильно! ✨");
+                    } else {
+                        alert("А вот и нет! 😉");
+                    }
+                    currentQuiz++;
+                    loadQuiz();
+                };
+                optsDiv.appendChild(button);
+            });
+        }
+        loadQuiz();
+
+        // 5. Секретное письмо
+        function openSecret() {
+            const input = document.getElementById('secretKey').value.trim().toLowerCase();
+            const correctPass = "17.01"; // Укажи свой пароль / дату
+
+            if(input === correctPass || input === "любовь") {
+                document.getElementById('secretLetter').style.display = 'block';
+                confetti({ particleCount: 100, spread: 60 });
+            } else {
+                alert("Неверный пароль! Попробуй ввести 4 цифры из пароля)");
+            }
+        }
+    </script>
+</body>
+</html>
